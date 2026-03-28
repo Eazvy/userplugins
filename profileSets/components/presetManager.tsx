@@ -4,10 +4,11 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
+import { Button } from "@components/Button";
 import { Heading } from "@components/Heading";
-import { Button } from "@components/index";
 import { classes } from "@utils/misc";
 import { openModal } from "@utils/modal";
+import { findComponentByCodeLazy } from "@webpack";
 import { React, SelectedGuildStore, TextInput, useStateFromStores } from "@webpack/common";
 
 import { cl, settings } from "../index";
@@ -18,6 +19,8 @@ import { ImportProfilesModal } from "./confirmModal";
 import { PresetList } from "./presetList";
 
 const PRESETS_PER_PAGE = 5;
+
+const ManaButton = findComponentByCodeLazy('"data-mana-component":"button"');
 
 type PresetManagerProps = {
     section?: PresetSection;
@@ -37,10 +40,10 @@ export function PresetManager({ section, guildId }: PresetManagerProps) {
     const isServerSection = resolvedSection === "server";
     const lastSelectedGuildId = useStateFromStores(
         [SelectedGuildStore],
-        () => SelectedGuildStore.getLastSelectedGuildId?.() ?? SelectedGuildStore.getGuildId?.()
+        () => SelectedGuildStore.getLastSelectedGuildId() ?? SelectedGuildStore.getGuildId()
     );
     const resolvedGuildId = isServerSection ? (guildId ?? lastSelectedGuildId ?? undefined) : undefined;
-    const canUseGuild = !isServerSection || !!resolvedGuildId;
+    const canUseGuild = !isServerSection || Boolean(resolvedGuildId);
 
     React.useEffect(() => {
         let isActive = true;
@@ -137,7 +140,7 @@ export function PresetManager({ section, guildId }: PresetManagerProps) {
         });
     };
 
-    const avatarSize = settings.store.avatarSize || 40;
+    const { avatarSize } = settings.store;
     const hasPresets = presets.length > 0;
     const shouldShowPagination = filteredPresets.length > PRESETS_PER_PAGE;
 
@@ -248,23 +251,14 @@ export function PresetManager({ section, guildId }: PresetManagerProps) {
             )}
 
             <div className={cl("import")}>
-                <Button
-                    size="small"
-                    variant="secondary"
+                <ManaButton
+                    size="sm"
+                    variant="expressive"
                     onClick={handleRandomPreset}
                     className={cl("random")}
                     disabled={!presets.length || !canUseGuild}
-                >
-                    <span className={cl("random-content")}>
-                        <svg className={cl("random-icon")} viewBox="0 0 24 24" aria-hidden="true">
-                            <path
-                                fill="currentColor"
-                                d="M20.5 4h-5a1 1 0 0 0 0 2h2.586l-4.293 4.293a1 1 0 0 0 1.414 1.414L19.5 7.414V10a1 1 0 1 0 2 0V5a1 1 0 0 0-1-1Zm-16 1a1 1 0 0 0 0 2h2.586l4.293 4.293a1 1 0 1 0 1.414-1.414L8.414 5H4.5ZM5 15a1 1 0 0 0-1 1v5a1 1 0 1 0 2 0v-2.586l4.293 4.293a1 1 0 0 0 1.414-1.414L7.414 17H10a1 1 0 1 0 0-2H5Zm14.5 0a1 1 0 0 0 0 2h-2.586l-4.293 4.293a1 1 0 1 0 1.414 1.414L18.586 17H21a1 1 0 1 0 0-2h-1.5Z"
-                            />
-                        </svg>
-                        Random
-                    </span>
-                </Button>
+                    text="Random"
+                />
                 <Button
                     size="small"
                     variant="secondary"
