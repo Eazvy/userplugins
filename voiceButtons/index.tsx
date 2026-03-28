@@ -5,7 +5,7 @@
  */
 
 import { Flex } from "@components/Flex";
-import { EquicordDevs } from "@utils/constants";
+import { Devs } from "@utils/constants";
 import definePlugin from "@utils/types";
 import { User } from "@vencord/discord-types";
 import { React } from "@webpack/common";
@@ -16,7 +16,7 @@ import { UserChatButton, UserDeafenButton, UserMuteButton } from "./utils";
 export default definePlugin({
     name: "VoiceButtons",
     description: "Quickly DM, mute, or deafen any user right from the voice-call panel.",
-    authors: [EquicordDevs.nicola02nb, EquicordDevs.omaw],
+    authors: [Devs.nicola02nb, Devs.omaw],
     settings,
     patches: [
         {
